@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact &amp; Legal — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container">
+        <div class="grid-2" style="align-items:start;">
+          <div class="panel">
+            <h1 style="font-size:26px; color:var(--primary); margin-bottom:8px;">Contact SKSARS Housing</h1>
+            <p style="font-size:14px; color:var(--text-secondary); margin:0 0 20px;">
+              Questions about property verification, rental contracts, or regional partnerships in Madhya Pradesh? Send us a message.
+            </p>
+            <form id="contact-support-form" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="form-field">
+                <label class="form-label" for="c-name">Full Name</label>
+                <input class="form-control" id="c-name" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="c-email">Email</label>
+                <input type="email" class="form-control" id="c-email" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="c-msg">Message</label>
+                <textarea class="form-textarea" id="c-msg" rows="4" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Send Support Inquiry</button>
+            </form>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="panel" id="about">
+              <h2 style="font-size:20px; color:var(--primary); margin-bottom:8px;">About SKSARS Housing</h2>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                SKSARS Housing connects homebuyers, tenants, property owners, and agents across 16 cities in Madhya Pradesh—including Bhopal, Indore, Jabalpur, Gwalior, Ujjain, Sagar, Rewa, Satna, Ratlam, Dewas, Chhindwara, Vidisha, Sehore, Narmadapuram, Khandwa, and Burhanpur.
+              </p>
+            </div>
+
+            <div class="panel" id="privacy">
+              <h2 style="font-size:20px; color:var(--primary); margin-bottom:8px;">Privacy Policy</h2>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                Verification documents uploaded by property owners are stored privately in isolated Firebase Storage directories accessible exclusively to the uploading owner and authorized administrators. SKSARS Housing also integrates Google Maps Platform features, subject to Google's Privacy Policy and Google Maps End User Additional Terms of Service.
+              </p>
+            </div>
+
+            <div class="panel" id="terms">
+              <h2 style="font-size:20px; color:var(--primary); margin-bottom:8px;">Terms of Service</h2>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                All listings undergo admin review before publication. Price analytics reflect averages derived from active platform listings and are informational estimates only. Rent payment records require verified gateway transaction IDs before completion.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, showToast, APP_STATE } from '/app.js';
+      import { createInquiryRecord } from '/js/database.js';
+      import { isFirebaseConfigured } from '/firebase.js';
+
+      initAppShell('contact');
+
+      document.getElementById('contact-support-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!isFirebaseConfigured() || !APP_STATE.user) {
+          showToast('Message noted. Sign in with Firebase active to log support tickets directly to the Admin Console.', 'info');
+          e.target.reset();
+          return;
+        }
+        try {
+          await createInquiryRecord({
+            propertyId: 'support_general',
+            propertyTitle: 'General Support Inquiry',
+            ownerId: 'platform_admin',
+            senderId: APP_STATE.user.uid,
+            senderName: document.getElementById('c-name').value,
+            senderEmail: document.getElementById('c-email').value,
+            message: document.getElementById('c-msg').value,
+          });
+          showToast('Support inquiry submitted.', 'success');
+          e.target.reset();
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      });
+    </script>
+  </body>
+</html>

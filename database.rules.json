@@ -1,0 +1,189 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        ".write": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        ".validate": "newData.hasChildren(['uid', 'name', 'email', 'role'])",
+        "uid": {
+          ".validate": "newData.val() === $uid"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 80"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length <= 160"
+        },
+        "phone": {
+          ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 20)"
+        },
+        "role": {
+          ".validate": "auth.token.admin === true ? newData.val().matches(/^(buyer|tenant|owner|agent|admin)$/) : (newData.val().matches(/^(buyer|tenant|owner|agent)$/) && (!data.exists() || newData.val() === data.val()))"
+        },
+        "verified": {
+          ".validate": "auth.token.admin === true || (!data.exists() && newData.val() === false) || (data.exists() && newData.val() === data.val())"
+        },
+        "status": {
+          ".validate": "auth.token.admin === true || (!data.exists() && newData.val() === 'active') || (data.exists() && newData.val() === data.val())"
+        }
+      }
+    },
+
+    "properties": {
+      ".indexOn": ["status", "city", "locality", "listingType", "category", "ownerId", "price", "createdAt", "featured"],
+      ".read": "auth != null && auth.token.admin === true || query.orderByChild == 'status' && query.equalTo == 'approved' || auth != null && query.orderByChild == 'ownerId' && query.equalTo == auth.uid",
+      "$propertyId": {
+        ".read": "(data.child('status').val() === 'approved') || (auth != null && (data.child('ownerId').val() === auth.uid || auth.token.admin === true))",
+        ".write": "auth != null && (auth.token.admin === true || (!data.exists() && newData.child('ownerId').val() === auth.uid) || (data.exists() && data.child('ownerId').val() === auth.uid && newData.child('ownerId').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['title', 'category', 'listingType', 'city', 'locality', 'price', 'ownerId', 'status'])",
+        "ownerId": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "title": {
+          ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 140"
+        },
+        "listingType": {
+          ".validate": "newData.val().matches(/^(buy|rent|pg|commercial)$/)"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "status": {
+          ".validate": "auth.token.admin === true ? newData.val().matches(/^(draft|pending|approved|rejected|rented|sold|expired)$/) : newData.val().matches(/^(draft|pending)$/)"
+        },
+        "verified": {
+          ".validate": "auth.token.admin === true || (!data.exists() && newData.val() === false) || (data.exists() && newData.val() === data.val())"
+        },
+        "featured": {
+          ".validate": "auth.token.admin === true || (!data.exists() && newData.val() === false) || (data.exists() && newData.val() === data.val())"
+        }
+      }
+    },
+
+    "favorites": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$propertyId": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "!newData.exists() || newData.hasChildren(['propertyId', 'savedAt'])"
+        }
+      }
+    },
+
+    "inquiries": {
+      ".indexOn": ["ownerId", "senderId", "propertyId", "createdAt"],
+      ".read": "auth != null && (auth.token.admin === true || (query.orderByChild == 'ownerId' && query.equalTo == auth.uid) || (query.orderByChild == 'senderId' && query.equalTo == auth.uid))",
+      "$inquiryId": {
+        ".read": "auth != null && (auth.token.admin === true || data.child('ownerId').val() === auth.uid || data.child('senderId').val() === auth.uid)",
+        ".write": "auth != null && ((!data.exists() && newData.child('senderId').val() === auth.uid) || (data.exists() && (data.child('ownerId').val() === auth.uid || auth.token.admin === true)))",
+        ".validate": "newData.hasChildren(['propertyId', 'ownerId', 'senderId', 'senderName', 'message', 'status'])",
+        "message": {
+          ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 1500"
+        },
+        "status": {
+          ".validate": "newData.val().matches(/^(unread|read|replied|closed)$/)"
+        }
+      }
+    },
+
+    "reports": {
+      ".indexOn": ["propertyId", "status", "createdAt"],
+      ".read": "auth != null && auth.token.admin === true",
+      "$reportId": {
+        ".read": "auth != null && (auth.token.admin === true || data.child('reporterId').val() === auth.uid)",
+        ".write": "auth != null && ((!data.exists() && newData.child('reporterId').val() === auth.uid) || auth.token.admin === true)",
+        ".validate": "newData.hasChildren(['propertyId', 'reporterId', 'reason', 'status'])",
+        "status": {
+          ".validate": "auth.token.admin === true ? newData.val().matches(/^(open|reviewed|dismissed|action_taken)$/) : newData.val() === 'open'"
+        }
+      }
+    },
+
+    "cities": {
+      ".indexOn": ["name", "active"],
+      ".read": true,
+      "$cityId": {
+        ".write": "auth != null && auth.token.admin === true",
+        ".validate": "newData.hasChildren(['name', 'state', 'active'])"
+      }
+    },
+
+    "localities": {
+      ".indexOn": ["cityId", "cityName", "name"],
+      ".read": true,
+      "$localityId": {
+        ".write": "auth != null && auth.token.admin === true",
+        ".validate": "newData.hasChildren(['cityId', 'cityName', 'name'])"
+      }
+    },
+
+    "rentalContracts": {
+      ".indexOn": ["ownerId", "tenantId", "propertyId", "status", "endDate"],
+      ".read": "auth != null && (auth.token.admin === true || (query.orderByChild == 'ownerId' && query.equalTo == auth.uid) || (query.orderByChild == 'tenantId' && query.equalTo == auth.uid))",
+      "$contractId": {
+        ".read": "auth != null && (auth.token.admin === true || data.child('ownerId').val() === auth.uid || data.child('tenantId').val() === auth.uid)",
+        ".write": "auth != null && (auth.token.admin === true || (!data.exists() && newData.child('ownerId').val() === auth.uid) || (data.exists() && data.child('ownerId').val() === auth.uid && newData.child('ownerId').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['propertyId', 'ownerId', 'monthlyRent', 'securityDeposit', 'startDate', 'endDate', 'status'])",
+        "monthlyRent": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "securityDeposit": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "status": {
+          ".validate": "newData.val().matches(/^(active|expiring_soon|renewal_requested|renewed|expired|terminated)$/)"
+        }
+      }
+    },
+
+    "rentalPayments": {
+      ".indexOn": ["contractId", "ownerId", "tenantId", "dueDate"],
+      ".read": "auth != null && (auth.token.admin === true || (query.orderByChild == 'ownerId' && query.equalTo == auth.uid) || (query.orderByChild == 'tenantId' && query.equalTo == auth.uid))",
+      "$paymentId": {
+        ".read": "auth != null && (auth.token.admin === true || data.child('ownerId').val() === auth.uid || data.child('tenantId').val() === auth.uid)",
+        ".write": "auth != null && (auth.token.admin === true || (!data.exists() && newData.child('ownerId').val() === auth.uid && newData.child('status').val() !== 'completed'))",
+        ".validate": "newData.hasChildren(['contractId', 'ownerId', 'amount', 'dueDate', 'status'])",
+        "status": {
+          ".validate": "newData.val().matches(/^(pending|awaiting_verification|failed|completed)$/) && (newData.val() !== 'completed' || (newData.child('gatewayTransactionId').isString() && newData.child('gatewayTransactionId').val().length >= 8))"
+        }
+      }
+    },
+
+    "notifications": {
+      "$uid": {
+        ".indexOn": ["createdAt", "read"],
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        "$notificationId": {
+          ".write": "auth != null && (auth.uid === $uid || auth.token.admin === true || (!data.exists() && newData.child('senderUid').val() === auth.uid))",
+          ".validate": "newData.hasChildren(['title', 'message', 'type', 'read', 'createdAt'])"
+        }
+      }
+    },
+
+    "verificationRequests": {
+      ".indexOn": ["status", "submittedAt"],
+      ".read": "auth != null && auth.token.admin === true",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        ".write": "auth != null && (auth.token.admin === true || (auth.uid === $uid && newData.child('status').val() === 'pending'))",
+        ".validate": "newData.hasChildren(['uid', 'fullName', 'idDocPath', 'ownershipDocPath', 'status'])",
+        "uid": {
+          ".validate": "newData.val() === $uid"
+        },
+        "status": {
+          ".validate": "auth.token.admin === true ? newData.val().matches(/^(pending|approved|rejected)$/) : newData.val() === 'pending'"
+        }
+      }
+    },
+
+    "settings": {
+      ".read": true,
+      "$settingId": {
+        ".write": "auth != null && auth.token.admin === true"
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="container">
+      <div class="workspace-layout">
+        <aside class="sidebar-panel">
+          <div style="font-size:13px; font-weight:700; color:var(--primary); margin-bottom:12px;">Member Workspace</div>
+          <nav class="sidebar-nav" aria-label="Dashboard Navigation">
+            <button type="button" class="sidebar-link active" data-dash-tab="overview">Overview</button>
+            <button type="button" class="sidebar-link" data-dash-tab="properties">My Properties</button>
+            <a href="./add-property.html" class="sidebar-link">Add New Property</a>
+            <button type="button" class="sidebar-link" data-dash-tab="favorites">My Favourites</button>
+            <button type="button" class="sidebar-link" data-dash-tab="recent">Recently Viewed</button>
+            <button type="button" class="sidebar-link" data-dash-tab="inquiries">Inquiries</button>
+            <button type="button" class="sidebar-link" data-dash-tab="rentals">Rental Management</button>
+            <button type="button" class="sidebar-link" data-dash-tab="verification">Verification</button>
+            <button type="button" class="sidebar-link" data-dash-tab="notifications">
+              <span>Notifications</span>
+              <span data-notif-count style="font-size:12px; font-weight:700; color:var(--secondary);"></span>
+            </button>
+            <a href="./profile.html" class="sidebar-link">My Profile</a>
+            <button type="button" class="sidebar-link" data-dash-tab="settings">Account Settings</button>
+            <button type="button" class="sidebar-link" onclick="window.sksarsLogout()" style="color:var(--danger);">Logout</button>
+          </nav>
+        </aside>
+
+        <section id="dashboard-main-view">
+          <div class="panel"><p>Loading dashboard...</p></div>
+        </section>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell } from '/app.js';
+      import { initDashboardPage } from '/js/dashboard.js';
+
+      initAppShell('dashboard');
+      initDashboardPage();
+    </script>
+  </body>
+</html>

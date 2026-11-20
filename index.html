@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKSARS Housing — Madhya Pradesh Real Estate Platform</title>
+    <meta
+      name="description"
+      content="Discover verified homes, rentals, PG accommodations, plots, and commercial properties across Bhopal, Indore, Jabalpur, Gwalior, Ujjain, and 16 Madhya Pradesh cities on SKSARS Housing."
+    />
+    <meta property="og:title" content="SKSARS Housing — Madhya Pradesh Real Estate Platform" />
+    <meta
+      property="og:description"
+      content="Buy, rent, PG, and commercial properties across Madhya Pradesh with verified owners, live price analytics, and Google Maps search."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="hero-kicker">Madhya Pradesh Property Marketplace</div>
+            <h1 class="hero-title">Find verified homes, rentals, and commercial spaces across MP</h1>
+            <p class="hero-subtitle">
+              Search owner-direct and verified agent listings across Bhopal, Indore, Jabalpur, Gwalior, Ujjain, and 11 more Madhya Pradesh cities with transparent price analytics.
+            </p>
+
+            <div class="search-panel">
+              <div class="search-tabs" role="tablist" aria-label="Property Listing Type">
+                <button type="button" class="search-tab active" data-hero-tab="buy">Buy</button>
+                <button type="button" class="search-tab" data-hero-tab="rent">Rent</button>
+                <button type="button" class="search-tab" data-hero-tab="pg">PG / Hostel</button>
+                <button type="button" class="search-tab" data-hero-tab="commercial">Commercial</button>
+              </div>
+              <form id="hero-search-form" class="search-form-row">
+                <select class="form-select" id="hero-city" aria-label="Select Madhya Pradesh City"></select>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hero-query"
+                  placeholder="Search locality, landmark, or project..."
+                  aria-label="Search locality or keyword"
+                />
+                <select class="form-select" id="hero-category" aria-label="Property Category"></select>
+                <button type="submit" class="btn btn-secondary">Search</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="hero-media">
+            <img
+              src="/src/assets/images/hero_mp_residence_1795138146302.jpg"
+              alt="Modern residential courtyard enclave in Madhya Pradesh at golden hour"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Popular Cities in Madhya Pradesh -->
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Explore Madhya Pradesh Cities</h2>
+              <p class="section-desc">Live listing counts loaded directly from Firebase across all 16 MP hubs.</p>
+            </div>
+            <a href="/pages/search.html" class="btn btn-outline btn-sm">View All Listings</a>
+          </div>
+          <div id="mp-cities-grid" class="grid-4"></div>
+        </div>
+      </section>
+
+      <!-- Featured & Verified Properties -->
+      <section class="section section-alt">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Featured &amp; Verified Properties</h2>
+              <p class="section-desc">Admin-approved listings ready for direct owner inquiry and site visits.</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-outline btn-sm" data-home-feed="featured">Featured</button>
+              <button type="button" class="btn btn-outline btn-sm" data-home-feed="newest">Newly Listed</button>
+              <button type="button" class="btn btn-outline btn-sm" data-home-feed="verified">Verified Only</button>
+            </div>
+          </div>
+          <div id="home-properties-grid" class="grid-3"></div>
+        </div>
+      </section>
+
+      <!-- Property Categories (All 12) -->
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Browse by Property Category</h2>
+              <p class="section-desc">Residential apartments, villas, PG stays, commercial offices, plots, and warehouses.</p>
+            </div>
+          </div>
+          <div id="home-categories-grid" class="grid-4"></div>
+        </div>
+      </section>
+
+      <!-- Trending Localities & Recently Viewed -->
+      <section class="section section-alt">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Trending MP Localities</h2>
+              <p class="section-desc">High-demand neighbourhoods across Bhopal, Indore, Jabalpur, Gwalior, and Ujjain.</p>
+            </div>
+          </div>
+          <div id="trending-localities-grid" class="grid-4"></div>
+
+          <div id="home-recent-wrap" style="margin-top:44px; display:none;">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">Recently Viewed</h2>
+                <p class="section-desc">Pick up where you left off.</p>
+              </div>
+            </div>
+            <div id="home-recent-grid" class="grid-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Property Price Analytics (Real Data Estimates Only) -->
+      <section class="section" id="analytics">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Madhya Pradesh Property Price Analytics</h2>
+              <p class="section-desc">
+                Estimated averages calculated strictly from active approved listings in Firebase Realtime Database (estimates only, not official government circle rates).
+              </p>
+            </div>
+          </div>
+          <div id="analytics-kpi-summary" style="margin-bottom:24px;"></div>
+          <div class="grid-2">
+            <div class="panel">
+              <h3 style="font-size:17px; color:var(--primary); margin-bottom:14px;">Average Listing Price by City (₹ Lakhs)</h3>
+              <canvas id="mp-city-price-chart" height="220"></canvas>
+            </div>
+            <div class="panel">
+              <h3 style="font-size:17px; color:var(--primary); margin-bottom:14px;">Price per Sq.Ft. by City (₹ / sq.ft.)</h3>
+              <canvas id="mp-sqft-trend-chart" height="220"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why Choose SKSARS Housing + Testimonials -->
+      <section class="section section-alt">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Why Choose SKSARS Housing</h2>
+              <p class="section-desc">Built with strict owner verification, secure rental contracts, and zero-brokerage options.</p>
+            </div>
+          </div>
+          <div class="grid-3" style="margin-bottom:44px;">
+            <div class="panel">
+              <h3 style="font-size:18px; color:var(--primary); margin-bottom:8px;">Verified Document Workflow</h3>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                Owner identity and registry proofs are stored privately in protected Firebase Storage and reviewed by authorized admins before badges appear.
+              </p>
+            </div>
+            <div class="panel">
+              <h3 style="font-size:18px; color:var(--primary); margin-bottom:8px;">Digital Rental Management</h3>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                Track lease start/end dates, security deposits, automated expiry reminders, renewal requests, and gateway-confirmed rent payment logs.
+              </p>
+            </div>
+            <div class="panel">
+              <h3 style="font-size:18px; color:var(--primary); margin-bottom:8px;">Interactive MP Location Maps</h3>
+              <p style="font-size:14px; color:var(--text-secondary); margin:0;">
+                Pin exact coordinates and inspect nearby schools, hospitals, markets, and transit connectivity powered by Google Maps Platform.
+              </p>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Homeowners &amp; Tenants Across MP</h2>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div class="panel">
+              <p style="font-size:14px; color:var(--text-secondary); margin:0 0 14px;">
+                "Before SKSARS Housing, coordinating tenant lease renewals in Arera Colony took manual spreadsheets. Switching to the rental dashboard gave us automated 30-day expiry alerts and clean payment records."
+              </p>
+              <div style="font-weight:700; color:var(--primary); font-size:14px;">Rajesh Tiwari</div>
+              <div style="font-size:12.5px; color:var(--text-muted);">Residential Property Owner, Bhopal</div>
+            </div>
+            <div class="panel">
+              <p style="font-size:14px; color:var(--text-secondary); margin:0 0 14px;">
+                "Relocating to Vijay Nagar for work was stressful until we filtered verified 2 BHK apartments with nearby schools and hospitals mapped right on the listing page."
+              </p>
+              <div style="font-weight:700; color:var(--primary); font-size:14px;">Priya Deshmukh</div>
+              <div style="font-size:12.5px; color:var(--text-muted);">Senior Product Analyst, Indore</div>
+            </div>
+            <div class="panel">
+              <p style="font-size:14px; color:var(--text-secondary); margin:0 0 14px;">
+                "Our commercial showroom listing in Napier Town received 14 qualified inquiries within two weeks after our ownership verification was approved."
+              </p>
+              <div style="font-weight:700; color:var(--primary); font-size:14px;">Ankit Maheshwari</div>
+              <div style="font-size:12.5px; color:var(--text-muted);">Managing Partner, Narmada Realty, Jabalpur</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady, getRecentlyViewed } from '/app.js';
+      import {
+        MP_CITIES_DATA,
+        PROPERTY_CATEGORIES,
+        getApprovedProperties,
+        escapeHtml,
+      } from '/js/database.js';
+      import {
+        createPropertyCardHtml,
+        bindPropertyCardActions,
+        renderSkeletonCards,
+      } from '/js/properties.js';
+      import { loadFavoritesSet } from '/js/favorites.js';
+      import { renderPriceAnalytics } from '/js/search.js';
+
+      initAppShell('home');
+
+      let selectedListingType = 'buy';
+      const heroTabs = document.querySelectorAll('[data-hero-tab]');
+      heroTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          selectedListingType = tab.getAttribute('data-hero-tab');
+          heroTabs.forEach((t) => t.classList.toggle('active', t === tab));
+        });
+      });
+
+      const heroCity = document.getElementById('hero-city');
+      heroCity.innerHTML =
+        `<option value="">All MP Cities</option>` +
+        MP_CITIES_DATA.map((c) => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+
+      const heroCategory = document.getElementById('hero-category');
+      heroCategory.innerHTML =
+        `<option value="">Any Category</option>` +
+        PROPERTY_CATEGORIES.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+      document.getElementById('hero-search-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const params = new URLSearchParams();
+        if (selectedListingType) params.set('listingType', selectedListingType);
+        if (heroCity.value) params.set('city', heroCity.value);
+        if (heroCategory.value) params.set('category', heroCategory.value);
+        const q = document.getElementById('hero-query').value.trim();
+        if (q) params.set('q', q);
+        window.location.href = `/pages/search.html?${params.toString()}`;
+      });
+
+      // Render 12 categories
+      const catGrid = document.getElementById('home-categories-grid');
+      catGrid.innerHTML = PROPERTY_CATEGORIES.map(
+        (cat) => `
+          <a href="/pages/search.html?category=${encodeURIComponent(cat)}" class="category-card">
+            <div class="city-name">${escapeHtml(cat)}</div>
+            <div class="city-meta">Explore listings &rarr;</div>
+          </a>
+        `
+      ).join('');
+
+      // Render Trending MP Localities
+      const trendingLocalities = [
+        { city: 'Bhopal', locality: 'Arera Colony' },
+        { city: 'Bhopal', locality: 'Kolar Road' },
+        { city: 'Indore', locality: 'Vijay Nagar' },
+        { city: 'Indore', locality: 'Super Corridor' },
+        { city: 'Jabalpur', locality: 'Civil Lines' },
+        { city: 'Gwalior', locality: 'City Centre' },
+        { city: 'Ujjain', locality: 'Nanakheda' },
+        { city: 'Rewa', locality: 'Civil Lines' },
+      ];
+      document.getElementById('trending-localities-grid').innerHTML = trendingLocalities
+        .map(
+          (item) => `
+          <a href="/pages/search.html?city=${encodeURIComponent(item.city)}&locality=${encodeURIComponent(item.locality)}" class="city-card">
+            <div class="city-name">${escapeHtml(item.locality)}</div>
+            <div class="city-meta">${escapeHtml(item.city)}, Madhya Pradesh</div>
+          </a>
+        `
+        )
+        .join('');
+
+      // Render Recently Viewed from browser storage
+      const recentList = getRecentlyViewed();
+      if (recentList.length) {
+        document.getElementById('home-recent-wrap').style.display = 'block';
+        const recentGrid = document.getElementById('home-recent-grid');
+        recentGrid.innerHTML = recentList.slice(0, 3).map(createPropertyCardHtml).join('');
+        bindPropertyCardActions(recentGrid);
+      }
+
+      const propGrid = document.getElementById('home-properties-grid');
+      const citiesGrid = document.getElementById('mp-cities-grid');
+      let loadedProperties = [];
+
+      function renderCityCards(properties) {
+        citiesGrid.innerHTML = MP_CITIES_DATA.map((c) => {
+          const count = properties.filter((p) => p.city === c.name).length;
+          return `
+            <a href="/pages/search.html?city=${encodeURIComponent(c.name)}" class="city-card">
+              <div class="city-name">${escapeHtml(c.name)}</div>
+              <div class="city-meta tabular-nums">${count} live listings · ${c.localities.length} localities</div>
+            </a>
+          `;
+        }).join('');
+      }
+
+      function renderFeed(mode = 'featured') {
+        let list = loadedProperties;
+        if (mode === 'featured') {
+          const feat = loadedProperties.filter((p) => p.featured);
+          list = feat.length ? feat : loadedProperties;
+        } else if (mode === 'verified') {
+          list = loadedProperties.filter((p) => p.verified);
+        }
+
+        if (!list.length) {
+          propGrid.innerHTML = `
+            <div class="state-box" style="grid-column:1/-1;">
+              <h3>No approved listings available yet</h3>
+              <p>Connect your Firebase Realtime Database in <code>firebase.js</code> and post or approve properties in the Admin Console to see live listings here.</p>
+              <a href="/pages/add-property.html" class="btn btn-primary">Post a Property</a>
+            </div>
+          `;
+          return;
+        }
+
+        propGrid.innerHTML = list.slice(0, 6).map(createPropertyCardHtml).join('');
+        bindPropertyCardActions(propGrid);
+      }
+
+      document.querySelectorAll('[data-home-feed]').forEach((btn) => {
+        btn.addEventListener('click', () => renderFeed(btn.getAttribute('data-home-feed')));
+      });
+
+      renderCityCards([]);
+      renderSkeletonCards(propGrid, 3);
+
+      onAuthReady(async (state) => {
+        if (state.user) {
+          await loadFavoritesSet(state.user.uid);
+        }
+        try {
+          loadedProperties = await getApprovedProperties();
+          renderCityCards(loadedProperties);
+          renderFeed('featured');
+          renderPriceAnalytics(
+            loadedProperties,
+            document.getElementById('mp-city-price-chart'),
+            document.getElementById('mp-sqft-trend-chart'),
+            document.getElementById('analytics-kpi-summary')
+          );
+        } catch (err) {
+          propGrid.innerHTML = `<div class="state-box" style="grid-column:1/-1;"><h3>Unable to fetch listings</h3><p>${escapeHtml(err.message)}</p></div>`;
+        }
+      });
+    </script>
+  </body>
+</html>

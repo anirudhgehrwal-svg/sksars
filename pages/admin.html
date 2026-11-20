@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Console — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="container">
+      <div class="workspace-layout">
+        <aside class="sidebar-panel">
+          <div style="font-size:13px; font-weight:700; color:var(--primary); margin-bottom:12px;">Admin Moderation</div>
+          <nav class="sidebar-nav" aria-label="Admin Navigation">
+            <button type="button" class="sidebar-link active" data-admin-tab="stats">Statistics</button>
+            <button type="button" class="sidebar-link" data-admin-tab="properties">Moderate Properties</button>
+            <button type="button" class="sidebar-link" data-admin-tab="verifications">Owner Verifications</button>
+            <button type="button" class="sidebar-link" data-admin-tab="users">Users &amp; Agents</button>
+            <button type="button" class="sidebar-link" data-admin-tab="reports">Reported Listings</button>
+            <button type="button" class="sidebar-link" data-admin-tab="locations">Cities &amp; Localities</button>
+            <button type="button" class="sidebar-link" data-admin-tab="inquiries">All Inquiries</button>
+            <button type="button" class="sidebar-link" data-admin-tab="settings">Website Settings</button>
+          </nav>
+        </aside>
+
+        <section id="admin-main-view">
+          <div class="panel"><p>Verifying administrator custom claims...</p></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="modal-backdrop" id="doc-preview-modal">
+      <div class="modal-card">
+        <div class="modal-head">
+          <h3>Private Verification Document</h3>
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="doc-preview-modal">Close</button>
+        </div>
+        <div id="doc-preview-body"></div>
+      </div>
+    </div>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell } from '/app.js';
+      import { initAdminPage } from '/js/admin.js';
+
+      initAppShell('dashboard');
+      initAdminPage();
+    </script>
+  </body>
+</html>

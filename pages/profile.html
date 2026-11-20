@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container" style="max-width:720px;">
+        <div class="panel" id="profile-root">
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady, showToast } from '/app.js';
+      import { updateUserProfileData, resendVerification } from '/js/auth.js';
+      import { uploadProfileAvatar } from '/js/storage.js';
+      import { MP_CITIES_DATA, escapeHtml } from '/js/database.js';
+
+      initAppShell('dashboard');
+
+      onAuthReady((state) => {
+        const root = document.getElementById('profile-root');
+        if (!state.user) {
+          root.innerHTML = `
+            <div class="state-box">
+              <h3>Sign in required</h3>
+              <p>Sign in to view and edit your SKSARS Housing profile.</p>
+              <a href="./login.html" class="btn btn-primary">Sign In</a>
+            </div>
+          `;
+          return;
+        }
+
+        const p = state.profile || {};
+        root.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:22px;">
+            <div>
+              <h1 style="font-size:24px; color:var(--primary);">My Profile</h1>
+              <div style="font-size:13px; color:var(--text-muted);">
+                ${escapeHtml(state.user.email)} · Role: ${escapeHtml(p.role || 'buyer')} · ${state.user.emailVerified ? 'Email Verified' : 'Email Unverified'}
+              </div>
+            </div>
+            ${
+              !state.user.emailVerified
+                ? `<button type="button" class="btn btn-outline btn-sm" id="resend-verify-btn">Resend Verification Email</button>`
+                : ''
+            }
+          </div>
+
+          <div style="display:flex; align-items:center; gap:18px; margin-bottom:22px;">
+            <img
+              id="profile-avatar-img"
+              src="${escapeHtml(p.photoURL || '/src/assets/images/prop_luxury_apartment_1795138146268.jpg')}"
+              alt="Profile picture"
+              style="width:76px; height:76px; border-radius:50%; object-fit:cover; border:1px solid var(--border);"
+              referrerpolicy="no-referrer"
+            />
+            <div>
+              <label class="form-label" for="avatar-file-input">Update Profile Photo</label>
+              <input type="file" id="avatar-file-input" accept="image/jpeg,image/png,image/webp" class="form-control" style="max-width:300px;" />
+              <div class="form-hint" id="avatar-upload-status">JPG, PNG, or WebP up to 3 MB.</div>
+            </div>
+          </div>
+
+          <form id="profile-edit-form" class="form-grid">
+            <div class="form-field">
+              <label class="form-label" for="prof-name">Full Name</label>
+              <input class="form-control" id="prof-name" required value="${escapeHtml(p.name || state.user.displayName || '')}" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prof-phone">Mobile Number</label>
+              <input class="form-control" id="prof-phone" value="${escapeHtml(p.phone || '')}" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prof-city">Primary MP City</label>
+              <select class="form-select" id="prof-city">
+                ${MP_CITIES_DATA.map((c) => `<option value="${escapeHtml(c.name)}" ${c.name === p.city ? 'selected' : ''}>${escapeHtml(c.name)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-field full">
+              <label class="form-label" for="prof-bio">About / Agency Details</label>
+              <textarea class="form-textarea" id="prof-bio" rows="3">${escapeHtml(p.bio || '')}</textarea>
+            </div>
+            <div class="form-field full" style="flex-direction:row; gap:10px;">
+              <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+              <a href="./dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+            </div>
+          </form>
+        `;
+
+        document.getElementById('resend-verify-btn')?.addEventListener('click', async () => {
+          try {
+            await resendVerification();
+            showToast('Verification email sent.', 'success');
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        });
+
+        let uploadedPhotoUrl = p.photoURL || '';
+        document.getElementById('avatar-file-input')?.addEventListener('change', async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const statusEl = document.getElementById('avatar-upload-status');
+          try {
+            const res = await uploadProfileAvatar(state.user.uid, file, (pct) => {
+              statusEl.textContent = `Uploading avatar (${pct}%)...`;
+            });
+            uploadedPhotoUrl = res.url;
+            document.getElementById('profile-avatar-img').src = res.url;
+            await updateUserProfileData(state.user.uid, {
+              name: document.getElementById('prof-name').value,
+              phone: document.getElementById('prof-phone').value,
+              city: document.getElementById('prof-city').value,
+              bio: document.getElementById('prof-bio').value,
+              photoURL: uploadedPhotoUrl,
+            });
+            statusEl.textContent = 'Profile picture updated.';
+            showToast('Profile picture uploaded!', 'success');
+          } catch (err) {
+            statusEl.textContent = err.message;
+            showToast(err.message, 'error');
+          }
+        });
+
+        document.getElementById('profile-edit-form')?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            await updateUserProfileData(state.user.uid, {
+              name: document.getElementById('prof-name').value,
+              phone: document.getElementById('prof-phone').value,
+              city: document.getElementById('prof-city').value,
+              bio: document.getElementById('prof-bio').value,
+              photoURL: uploadedPhotoUrl,
+            });
+            showToast('Profile updated successfully.', 'success');
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

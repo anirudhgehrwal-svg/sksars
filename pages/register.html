@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container" style="max-width:520px;">
+        <div class="panel">
+          <h1 style="font-size:24px; color:var(--primary); margin-bottom:6px;">Create your SKSARS Housing account</h1>
+          <p style="font-size:14px; color:var(--text-secondary); margin:0 0 20px;">
+            Register as a Buyer, Tenant, Property Owner, or Real Estate Agent. Email verification is sent automatically.
+          </p>
+
+          <form id="register-form" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="form-field">
+              <label class="form-label" for="reg-name">Full Name</label>
+              <input type="text" class="form-control" id="reg-name" required placeholder="e.g. Aarav Sharma" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="reg-email">Email Address</label>
+              <input type="email" class="form-control" id="reg-email" required placeholder="you@example.com" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="reg-phone">Mobile Number</label>
+              <input type="tel" class="form-control" id="reg-phone" required placeholder="+91 98XXXXXXXX" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="reg-role">Account Role</label>
+              <select class="form-select" id="reg-role" required>
+                <option value="buyer">Buyer (Looking to purchase property)</option>
+                <option value="tenant">Tenant (Looking for rent / PG)</option>
+                <option value="owner">Property Owner (Sell or rent my property)</option>
+                <option value="agent">Real Estate Agent</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="reg-password">Password (min 6 characters)</label>
+              <input type="password" class="form-control" id="reg-password" required minlength="6" placeholder="Create strong password" />
+            </div>
+            <button type="submit" class="btn btn-primary" id="reg-submit-btn">Create Account</button>
+          </form>
+
+          <p style="font-size:13.5px; color:var(--text-secondary); margin-top:16px; text-align:center;">
+            Already registered? <a href="./login.html" style="color:var(--secondary); font-weight:600;">Sign In</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, showToast } from '/app.js';
+      import { registerUser } from '/js/auth.js';
+
+      initAppShell('register');
+
+      document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('reg-submit-btn');
+        btn.disabled = true;
+        try {
+          await registerUser({
+            name: document.getElementById('reg-name').value,
+            email: document.getElementById('reg-email').value,
+            phone: document.getElementById('reg-phone').value,
+            role: document.getElementById('reg-role').value,
+            password: document.getElementById('reg-password').value,
+          });
+          showToast('Account created! Please check your email for verification link.', 'success');
+          setTimeout(() => {
+            window.location.href = './dashboard.html';
+          }, 1100);
+        } catch (err) {
+          showToast(err.message || 'Registration failed.', 'error');
+          btn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

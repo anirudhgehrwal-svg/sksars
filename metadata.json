@@ -1,0 +1,8 @@
+{
+  "name": "SKSARS Housing",
+  "description": "Complete Madhya Pradesh real estate platform for buying, renting, PG, commercial properties, rental management, price analytics, and verified listings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

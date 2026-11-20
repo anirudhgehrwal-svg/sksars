@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container" style="max-width:480px;">
+        <div class="panel">
+          <h1 style="font-size:24px; color:var(--primary); margin-bottom:6px;">Sign in to SKSARS Housing</h1>
+          <p style="font-size:14px; color:var(--text-secondary); margin:0 0 20px;">
+            Access your saved favourites, property listings, rental contracts, and inquiries.
+          </p>
+
+          <form id="login-form" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="form-field">
+              <label class="form-label" for="login-email">Email Address</label>
+              <input type="email" class="form-control" id="login-email" required placeholder="you@example.com" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="login-password">Password</label>
+              <input type="password" class="form-control" id="login-password" required placeholder="Enter your password" />
+            </div>
+            <button type="submit" class="btn btn-primary" id="login-submit-btn">Sign In</button>
+          </form>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; font-size:13.5px;">
+            <button type="button" class="btn btn-outline btn-sm" id="open-forgot-btn">Forgot Password?</button>
+            <a href="./register.html" style="color:var(--secondary); font-weight:600;">Create Account &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="modal-backdrop" id="forgot-modal">
+      <div class="modal-card">
+        <div class="modal-head">
+          <h3>Reset Password</h3>
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="forgot-modal">Close</button>
+        </div>
+        <form id="forgot-form" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="form-field">
+            <label class="form-label" for="forgot-email">Registered Email</label>
+            <input type="email" class="form-control" id="forgot-email" required placeholder="you@example.com" />
+          </div>
+          <button type="submit" class="btn btn-primary">Send Reset Link</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, showToast, openModal, closeModal, onAuthReady } from '/app.js';
+      import { loginUser, resetPassword } from '/js/auth.js';
+
+      initAppShell('login');
+
+      onAuthReady((state) => {
+        if (state.user) {
+          window.location.href = state.isAdmin ? './admin.html' : './dashboard.html';
+        }
+      });
+
+      document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('login-submit-btn');
+        btn.disabled = true;
+        try {
+          await loginUser(
+            document.getElementById('login-email').value,
+            document.getElementById('login-password').value
+          );
+          showToast('Signed in successfully.', 'success');
+        } catch (err) {
+          showToast(err.message || 'Sign in failed.', 'error');
+          btn.disabled = false;
+        }
+      });
+
+      document.getElementById('open-forgot-btn')?.addEventListener('click', () => openModal('forgot-modal'));
+
+      document.getElementById('forgot-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          await resetPassword(document.getElementById('forgot-email').value);
+          closeModal('forgot-modal');
+          showToast('Password reset email sent. Check your inbox.', 'success');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      });
+    </script>
+  </body>
+</html>

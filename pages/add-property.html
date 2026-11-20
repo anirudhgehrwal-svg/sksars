@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post a Property — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container" style="max-width:920px;">
+        <div class="panel">
+          <h1 id="add-prop-heading" style="font-size:26px; color:var(--primary); margin-bottom:6px;">Post a Property in Madhya Pradesh</h1>
+          <p style="font-size:14px; color:var(--text-secondary); margin:0 0 24px;">
+            Submitted properties remain pending until reviewed and approved by an authorized SKSARS Housing administrator.
+          </p>
+
+          <form id="add-property-form" class="form-grid">
+            <div class="form-field full">
+              <label class="form-label" for="prop-title">Property Title</label>
+              <input type="text" class="form-control" id="prop-title" required minlength="5" maxlength="140" placeholder="e.g. Spacious 3 BHK Corner Flat in Arera Colony" />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-category">Property Category</label>
+              <select class="form-select" id="prop-category" required></select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-listing-type">Buy / Rent / PG / Commercial</label>
+              <select class="form-select" id="prop-listing-type" required>
+                <option value="buy">Buy</option>
+                <option value="rent">Rent</option>
+                <option value="pg">PG / Hostel</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-city">MP City</label>
+              <select class="form-select" id="prop-city" required></select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-locality">Locality</label>
+              <select class="form-select" id="prop-locality" required></select>
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label" for="prop-address">Full Address</label>
+              <input type="text" class="form-control" id="prop-address" required placeholder="House / Plot No., Street, Landmark" />
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label" for="prop-description">Property Description</label>
+              <textarea class="form-textarea" id="prop-description" rows="4" required placeholder="Highlight connectivity, natural light, society facilities, and nearby landmarks..."></textarea>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-price">Property Price / Monthly Rent (₹)</label>
+              <input type="number" class="form-control" id="prop-price" required min="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-deposit">Security Deposit (₹, if rental)</label>
+              <input type="number" class="form-control" id="prop-deposit" min="0" value="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-rent">Monthly Rent (₹, optional)</label>
+              <input type="number" class="form-control" id="prop-rent" min="0" value="0" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-maintenance">Maintenance Charges (₹/month)</label>
+              <input type="number" class="form-control" id="prop-maintenance" min="0" value="0" />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-bhk">Bedrooms (BHK)</label>
+              <input type="number" class="form-control" id="prop-bhk" min="0" max="20" value="2" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-bathrooms">Bathrooms</label>
+              <input type="number" class="form-control" id="prop-bathrooms" min="0" max="20" value="2" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-balconies">Balconies</label>
+              <input type="number" class="form-control" id="prop-balconies" min="0" max="15" value="1" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-furnishing">Furnishing</label>
+              <select class="form-select" id="prop-furnishing">
+                <option value="Semi-Furnished">Semi-Furnished</option>
+                <option value="Furnished">Furnished</option>
+                <option value="Unfurnished">Unfurnished</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-carpet">Carpet Area (sq.ft.)</label>
+              <input type="number" class="form-control" id="prop-carpet" required min="50" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-builtup">Built-up Area (sq.ft.)</label>
+              <input type="number" class="form-control" id="prop-builtup" min="0" />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-possession">Possession Status</label>
+              <select class="form-select" id="prop-possession">
+                <option value="Ready to Move">Ready to Move</option>
+                <option value="Under Construction">Under Construction</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-age">Property Age</label>
+              <select class="form-select" id="prop-age">
+                <option value="New Construction">New Construction</option>
+                <option value="0-1 Years">0-1 Years</option>
+                <option value="1-5 Years">1-5 Years</option>
+                <option value="5-10 Years">5-10 Years</option>
+                <option value="10+ Years">10+ Years</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-floor">Floor Number</label>
+              <input type="number" class="form-control" id="prop-floor" min="0" value="1" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-total-floors">Total Floors</label>
+              <input type="number" class="form-control" id="prop-total-floors" min="1" value="4" />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-parking">Parking</label>
+              <select class="form-select" id="prop-parking">
+                <option value="1 Covered">1 Covered</option>
+                <option value="2 Covered">2 Covered</option>
+                <option value="1 Open">1 Open</option>
+                <option value="Street / None">Street / None</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-facing">Facing Direction</label>
+              <select class="form-select" id="prop-facing">
+                <option value="East">East</option>
+                <option value="North">North</option>
+                <option value="North-East">North-East</option>
+                <option value="West">West</option>
+                <option value="South">South</option>
+              </select>
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label">Amenities</label>
+              <div id="amenities-checkboxes" class="grid-3" style="gap:10px; padding:12px; border:1px solid var(--border); border-radius:var(--radius-sm);"></div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="prop-owner-name">Owner / Agent Name</label>
+              <input type="text" class="form-control" id="prop-owner-name" required />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-contact">Contact Number</label>
+              <input type="tel" class="form-control" id="prop-contact" required placeholder="+91 98XXXXXXXX" />
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label" for="prop-images">Upload Multiple Property Photos (JPG/PNG/WebP, max 5MB each)</label>
+              <input type="file" class="form-control" id="prop-images" accept="image/jpeg,image/png,image/webp" multiple />
+              <div class="progress-track"><div class="progress-fill" id="upload-progress-fill"></div></div>
+              <div class="form-hint" id="upload-progress-label">Select up to 10 photos to preview before uploading.</div>
+              <div class="upload-preview-grid" id="image-preview-grid"></div>
+            </div>
+
+            <div class="form-field full">
+              <label class="form-label">Pin Property Location Coordinates</label>
+              <div id="picker-map-box" class="map-box" style="height:280px;"></div>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-lat">Latitude</label>
+              <input type="number" step="any" class="form-control" id="prop-lat" value="23.2599" />
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="prop-lng">Longitude</label>
+              <input type="number" step="any" class="form-control" id="prop-lng" value="77.4126" />
+            </div>
+
+            <div class="form-field full" style="flex-direction:row; gap:12px; flex-wrap:wrap; margin-top:8px;">
+              <button type="submit" class="btn btn-outline" id="save-draft-btn">Save as Draft</button>
+              <button type="submit" class="btn btn-primary" id="submit-verify-btn">Submit for Admin Approval</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady } from '/app.js';
+      import { initAddPropertyPage } from '/js/properties.js';
+
+      initAppShell('add');
+      onAuthReady(async (state) => {
+        if (state.user) {
+          const nameInput = document.getElementById('prop-owner-name');
+          const phoneInput = document.getElementById('prop-contact');
+          if (nameInput && !nameInput.value) nameInput.value = state.profile?.name || state.user.displayName || '';
+          if (phoneInput && !phoneInput.value) phoneInput.value = state.profile?.phone || '';
+        }
+        await initAddPropertyPage();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Properties in Madhya Pradesh — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="container">
+      <div class="workspace-layout">
+        <aside>
+          <button type="button" class="btn btn-outline btn-sm mobile-filter-toggle" id="mobile-filter-toggle">
+            Toggle Filters
+          </button>
+          <div class="sidebar-panel collapsible-mobile" id="search-sidebar-panel">
+            <h2 style="font-size:17px; color:var(--primary); margin-bottom:14px;">Filter Properties</h2>
+            <form id="search-filters-form" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="form-field">
+                <label class="form-label" for="filter-query">Area / Keyword</label>
+                <input type="text" class="form-control" id="filter-query" placeholder="Area, project, road..." />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-listing-type">Transaction Type</label>
+                <select class="form-select" id="filter-listing-type">
+                  <option value="">All Types</option>
+                  <option value="buy">Buy</option>
+                  <option value="rent">Rent</option>
+                  <option value="pg">PG / Hostel</option>
+                  <option value="commercial">Commercial</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-city">MP City</label>
+                <select class="form-select" id="filter-city"></select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-locality">Locality</label>
+                <select class="form-select" id="filter-locality">
+                  <option value="">All Localities</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-category">Property Category</label>
+                <select class="form-select" id="filter-category"></select>
+              </div>
+              <div class="grid-2" style="gap:8px;">
+                <div class="form-field">
+                  <label class="form-label" for="filter-min-price">Min Price (₹)</label>
+                  <input type="number" class="form-control" id="filter-min-price" placeholder="Min" min="0" />
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="filter-max-price">Max Price (₹)</label>
+                  <input type="number" class="form-control" id="filter-max-price" placeholder="Max" min="0" />
+                </div>
+              </div>
+              <div class="grid-2" style="gap:8px;">
+                <div class="form-field">
+                  <label class="form-label" for="filter-bhk">BHK</label>
+                  <select class="form-select" id="filter-bhk">
+                    <option value="">Any</option>
+                    <option value="1">1 BHK</option>
+                    <option value="2">2 BHK</option>
+                    <option value="3">3 BHK</option>
+                    <option value="4">4+ BHK</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="filter-bathrooms">Min Bath</label>
+                  <select class="form-select" id="filter-bathrooms">
+                    <option value="">Any</option>
+                    <option value="1">1+</option>
+                    <option value="2">2+</option>
+                    <option value="3">3+</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid-2" style="gap:8px;">
+                <div class="form-field">
+                  <label class="form-label" for="filter-min-area">Min Sq.Ft.</label>
+                  <input type="number" class="form-control" id="filter-min-area" placeholder="Min" min="0" />
+                </div>
+                <div class="form-field">
+                  <label class="form-label" for="filter-max-area">Max Sq.Ft.</label>
+                  <input type="number" class="form-control" id="filter-max-area" placeholder="Max" min="0" />
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-furnishing">Furnishing</label>
+                <select class="form-select" id="filter-furnishing">
+                  <option value="">Any</option>
+                  <option value="Furnished">Furnished</option>
+                  <option value="Semi-Furnished">Semi-Furnished</option>
+                  <option value="Unfurnished">Unfurnished</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-possession">Possession</label>
+                <select class="form-select" id="filter-possession">
+                  <option value="">Any</option>
+                  <option value="Ready to Move">Ready to Move</option>
+                  <option value="Under Construction">Under Construction</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="filter-role">Posted By</label>
+                <select class="form-select" id="filter-role">
+                  <option value="">Owner &amp; Agent</option>
+                  <option value="owner">Owner Only</option>
+                  <option value="agent">Agent Only</option>
+                </select>
+              </div>
+              <label style="display:flex; align-items:center; gap:8px; font-size:13.5px; cursor:pointer;">
+                <input type="checkbox" id="filter-verified" />
+                <span>Verified Properties Only</span>
+              </label>
+              <button type="submit" class="btn btn-primary">Apply Filters</button>
+              <button type="button" class="btn btn-outline btn-sm" id="reset-filters-btn">Reset</button>
+            </form>
+          </div>
+        </aside>
+
+        <section>
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:24px; color:var(--primary);">Madhya Pradesh Properties</h1>
+              <div id="search-results-count" style="font-size:13.5px; color:var(--text-muted);">Loading listings...</div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn btn-outline btn-sm" id="save-search-alert-btn">Save Search Alert</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="toggle-map-view-btn">Show Map View</button>
+              <select class="form-select" id="filter-sort" style="width:auto; min-width:170px;">
+                <option value="newest">Sort: Newest</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="search-map-container" class="map-box map-box-lg" style="display:none; margin-bottom:24px;"></div>
+
+          <div id="search-results-grid" class="grid-3"></div>
+
+          <div style="text-align:center; margin-top:28px;">
+            <button type="button" class="btn btn-outline" id="load-more-btn" style="display:none;">Load More Properties</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady } from '/app.js';
+      import { loadFavoritesSet } from '/js/favorites.js';
+      import { initSearchPage } from '/js/search.js';
+
+      initAppShell('buy');
+      onAuthReady(async (state) => {
+        if (state.user) await loadFavoritesSet(state.user.uid);
+        await initSearchPage();
+      });
+    </script>
+  </body>
+</html>

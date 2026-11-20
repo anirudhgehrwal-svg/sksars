@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Details — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container" id="property-details-root">
+        <div class="panel"><p>Loading property details...</p></div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady } from '/app.js';
+      import { loadFavoritesSet } from '/js/favorites.js';
+      import { initPropertyDetailsPage } from '/js/properties.js';
+
+      initAppShell('buy');
+      onAuthReady(async (state) => {
+        if (state.user) await loadFavoritesSet(state.user.uid);
+        await initPropertyDetailsPage();
+      });
+    </script>
+  </body>
+</html>

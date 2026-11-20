@@ -1,0 +1,57 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isValidImage(maxBytes) {
+      return request.resource != null
+        && request.resource.size <= maxBytes
+        && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
+    }
+
+    function isValidVerificationDoc(maxBytes) {
+      return request.resource != null
+        && request.resource.size <= maxBytes
+        && (
+          request.resource.contentType.matches('image/(jpeg|jpg|png|webp)') ||
+          request.resource.contentType == 'application/pdf'
+        );
+    }
+
+    // Publicly viewable property photos; only owning user or admin can upload/delete
+    match /property-images/{uid}/{propertyId}/{fileName} {
+      allow read: if true;
+      allow create, update: if (isOwner(uid) || isAdmin()) && isValidImage(5 * 1024 * 1024);
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    // User avatars; authenticated read, owner write
+    match /profile-images/{uid}/{fileName} {
+      allow read: if isAuthenticated();
+      allow create, update: if (isOwner(uid) || isAdmin()) && isValidImage(3 * 1024 * 1024);
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    // Strictly private verification documents: NEVER publicly readable
+    match /verification-documents/{uid}/{fileName} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create, update: if isOwner(uid) && isValidVerificationDoc(10 * 1024 * 1024);
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    // Default deny for everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Favourites — SKSARS Housing</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="site-header-mount"></div>
+
+    <main class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h1 class="section-title">My Saved Properties</h1>
+            <p class="section-desc">Shortlisted homes, rentals, PG rooms, and commercial spaces.</p>
+          </div>
+          <a href="./search.html" class="btn btn-outline btn-sm">Explore More</a>
+        </div>
+        <div id="favorites-page-grid" class="grid-3"></div>
+      </div>
+    </main>
+
+    <div id="site-footer-mount"></div>
+    <div id="mobile-nav-mount"></div>
+
+    <script type="module">
+      import { initAppShell, onAuthReady } from '/app.js';
+      import { loadFavoritePropertiesList, loadFavoritesSet } from '/js/favorites.js';
+      import { createPropertyCardHtml, bindPropertyCardActions, renderSkeletonCards } from '/js/properties.js';
+      import { escapeHtml } from '/js/database.js';
+
+      initAppShell('favorites');
+      const grid = document.getElementById('favorites-page-grid');
+      renderSkeletonCards(grid, 3);
+
+      onAuthReady(async (state) => {
+        if (!state.user) {
+          grid.innerHTML = `
+            <div class="state-box" style="grid-column:1/-1;">
+              <h3>Sign in to view saved favourites</h3>
+              <p>Your shortlisted Madhya Pradesh properties sync across devices once you sign in.</p>
+              <a href="./login.html" class="btn btn-primary">Sign In</a>
+            </div>
+          `;
+          return;
+        }
+
+        try {
+          await loadFavoritesSet(state.user.uid);
+          const list = await loadFavoritePropertiesList(state.user.uid);
+          if (!list.length) {
+            grid.innerHTML = `
+              <div class="state-box" style="grid-column:1/-1;">
+                <h3>No saved properties yet</h3>
+                <p>Click the heart icon on any listing to save it for quick comparison.</p>
+                <a href="./search.html" class="btn btn-primary">Browse Properties</a>
+              </div>
+            `;
+            return;
+          }
+          grid.innerHTML = list.map(createPropertyCardHtml).join('');
+          bindPropertyCardActions(grid);
+        } catch (err) {
+          grid.innerHTML = `<div class="state-box" style="grid-column:1/-1;"><h3>Error</h3><p>${escapeHtml(err.message)}</p></div>`;
+        }
+      });
+    </script>
+  </body>
+</html>
